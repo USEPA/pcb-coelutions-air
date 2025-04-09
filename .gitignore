@@ -1,0 +1,27 @@
+*.pyc
+*.c
+*.db
+*.ipynb_checkpoints
+*.pk
+*~
+*.pdf
+*.nc
+*.out
+
+*.egg-info/
+.cache/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.tox/
+.vscode/
+build/
+dist/
+htmlcov/
+venv/
+
+# files
+*.log
+*.py[cod]
+.coverage
+.env
