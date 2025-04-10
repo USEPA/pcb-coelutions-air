@@ -28,7 +28,7 @@ These can be installed within an R instnace using `install.packages(c('brms', 't
 ## Running the code
 All extracted data used for the analysis is in `data/` and each coelution-specific regression model is built as a `process_coelution.coelution` object.
 
-Example quickstart (`run_coelutions.ipynb` provies live notebook)
+Example quickstart (`run_coelutions.ipynb` provides live notebook)
 ```
 from process_coelution import coelution
 PCBs = ['PCB17', 'PCB18', 'PCB49'] # Define list of PCBs present in coelution

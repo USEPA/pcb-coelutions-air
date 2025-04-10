@@ -8,6 +8,7 @@
 *.nc
 *.out
 *.rds
+*.html
 
 *.egg-info/
 .cache/
