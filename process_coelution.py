@@ -692,7 +692,7 @@ class coelution:
             
             self.new_summary = self.new_study.groupby(self.fixed_effects + ['PCB'])[self.draw_type].apply(lambda x: az.summary(x.values, kind='stats', hdi_prob=0.95)).reset_index()#.drop(columns='level_3')#.sort_values(by='phase')
             self.new_summary = self.new_summary.filter(regex='^(?!level_)')
-    def plot_comparison(self, observed='indiv', prediction='pop', dodge=False, save=False, use_legend=True):
+    def plot_comparison(self, observed='indiv', prediction='pop', dodge=False, save=False, use_legend=True, use_generic=False, figsize=(8,12)):
         """
         Plot the comparison between the posterior and the observed data
 
@@ -710,6 +710,7 @@ class coelution:
 
         """
         data_plot = self.data.copy()
+
         #X_norm_plot['label'] = feature_design.apply(assign_label, axis=1)
         plot_vars = self.fixed_effects + ['HERO_ID']
         data_plot = pd.melt(data_plot, value_vars=self.PCBs, id_vars=plot_vars)
@@ -718,6 +719,9 @@ class coelution:
         HERO_IDs = data_plot['HERO_ID'].unique()
         pal = sns.color_palette('tab10', len(HERO_IDs))
         palette = dict(zip(HERO_IDs, pal))
+
+        generic_label = {pcb: 'PCB ' + chr(65 + i) for i, pcb in enumerate(self.PCBs)}
+
         if all([x in self.hero_map.hero_id.values for x in palette.keys()]) and use_legend:
             # Only change to short ciation if all hero_ids are in the mapper
             #palette = {self.hero_map.loc[self.hero_map.hero_id == k, 'short'].values[0]: v for k,v in tmp_palette.items()}
@@ -734,12 +738,18 @@ class coelution:
             plot_chain = self.ppc_pop.copy()
             #plot_chain = self.new_study.copy()
         
+        
+        if use_generic:
+            # Use the generic labels to map values to letters
+            data_plot['variable'] = data_plot['variable'].map(generic_label)
+            plot_chain['PCB'] = plot_chain['PCB'].map(generic_label)
         self.data_plot = data_plot
         self.plot_chain = plot_chain
+        
         n_effects = len(np.unique(plot_chain[self.fixed_effects].values))
 
         if n_effects == 0: # Intercept only
-            fig, ax = plt.subplots(nrows=1, ncols=1, sharex=True, sharey=True, figsize=(8,12))
+            fig, ax = plt.subplots(nrows=1, ncols=1, sharex=True, sharey=True, figsize=figsize)
             if prediction == 'pop':
                 sns.violinplot(x=self.draw_type, y="PCB", data=plot_chain, ax=ax)
                 #sns.swarmplot(x=self.draw_type, y="PCB", data=plot_chain, ax=ax)
@@ -811,6 +821,8 @@ class coelution:
                     ax.legend(handles, labels)
                 ax.set_ylabel('')
                 ax.set_xlabel('Proportion', fontsize=16)
+                # Increase font size of title
+                ax.set_title(ax.get_title(), fontsize=16)
                 ax.xaxis.set_tick_params(labelsize = 14)
                 ax.yaxis.set_tick_params(labelsize = 14)
                 ax.set_xlim([0,1])
