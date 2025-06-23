@@ -35,7 +35,7 @@ PCBs = ['PCB17', 'PCB18', 'PCB49'] # Define list of PCBs present in coelution
 model_type = 'intercept_only' # Type of regression model to run: intercept_only, sample_only, etc.
 my_coelution = coelution(PCBs, model_type=model_type)
 my_coelution.prep_data() # Prep the raw data and use the specified PCB columns to calculate proportions
-my_coelution.fit_coeultion(disp_summary) # fit the dirichlet regression. disp_summary=True prints the brms summary statistics from the fit
+my_coelution.fit_coelution(disp_summary) # fit the dirichlet regression. disp_summary=True prints the brms summary statistics from the fit
 my_coelution.sample_posterior() # Sample the posterior fits to predict probabilstic proportions of the coelution
 
 display(my_coelution.prop_summry) # Summary of posterior distributions for PCB-specific propositons
